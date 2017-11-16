@@ -1,0 +1,23 @@
+{
+  "name": "spyfu-vue-analytics",
+  "version": "0.0.0",
+  "description": "Easily log events to third party analytics providers",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/spyfu/spyfu-vue-analytics.git"
+  },
+  "keywords": [
+    "analytics",
+    "vue"
+  ],
+  "author": "SpyFu",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/spyfu/spyfu-vue-analytics/issues"
+  },
+  "homepage": "https://github.com/spyfu/spyfu-vue-analytics#readme"
+}
