@@ -110,5 +110,60 @@ describe('spyfu-vue-analytics', () => {
             expect(warn.lastCall.args[0]).to.include('Invalid configuration for "whatever" event, value must be an object.');
             warn.restore();
         });
+
+        it('warns when an event\'s handler is not defined', () => {
+            const warn = sinon.stub(console, 'warn');
+
+            Vue.use(Plugin, {
+                events: {
+                    whatever: {
+                        foo: null,
+                    },
+                },
+                handlers: {
+                    // omitting the foo handler
+                },
+            });
+
+            const vm = new Vue();
+
+            vm.$logEvent('whatever');
+
+            expect(warn.called).to.be.true;
+            expect(warn.lastCall.args[0]).to.include('Missing "foo" handler for event "whatever"');
+        });
+
+        it('calls correct handler when events are logged', () => {
+            const payload = {};
+            const fooWhatever = {};
+            const barWhatever = {};
+            const fooHandler = sinon.stub();
+            const barHandler = sinon.stub();
+
+            Vue.use(Plugin, {
+                events: {
+                    whatever: {
+                        foo: fooWhatever,
+                        bar: barWhatever,
+                    },
+                },
+                handlers: {
+                    foo: fooHandler,
+                    bar: barHandler,
+                },
+            });
+
+            const vm = new Vue();
+
+            vm.$logEvent('whatever', payload);
+
+            expect(fooHandler.called).to.be.true;
+            expect(fooHandler.lastCall.args[0]).to.equal(fooWhatever);
+            expect(fooHandler.lastCall.args[1]).to.equal(payload);
+            
+            expect(barHandler.called).to.be.true;
+            expect(barHandler.lastCall.args[0]).to.equal(barWhatever);
+            expect(barHandler.lastCall.args[1]).to.equal(payload);
+        });
     });
 });

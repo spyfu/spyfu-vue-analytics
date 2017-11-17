@@ -34,9 +34,11 @@ var index = {
                 }
 
         // and finally, attach our logEvent method to the Vue prototype
-        Vue.prototype.$logEvent = (name, payload) => this.logEvent(options.events, name, payload);
+        Vue.prototype.$logEvent = (name, payload) => this.logEvent(options, name, payload);
     },
-    logEvent(events, name, payload) {
+    logEvent(options, name, payload) {
+        const { events, handlers } = options;
+
         // make sure the given event exists
         if (typeof events[name] === 'undefined') {
             warn(`Unknown event "${name}".`);
@@ -46,6 +48,22 @@ var index = {
         else if (typeof events[name] !== 'object') {
                 warn(`Invalid configuration for "${name}" event, value must be an object.`);
             }
+
+            // finally, call the given event handlers
+            else {
+                    Object.keys(events[name]).forEach(key => {
+
+                        // make sure the given handler is defined
+                        if (typeof handlers[key] !== 'function') {
+                            warn(`Missing "${key}" handler for event "${name}".`);
+                        }
+
+                        // otherwise call the given handler
+                        else {
+                                handlers[key](events[name][key], payload);
+                            }
+                    });
+                }
     }
 };
 
