@@ -55,7 +55,7 @@ export default {
 
                 // otherwise call the given handler
                 else {
-                    handlers[key](events[name][key], payload);
+                    handlers[key](name, events[name][key], payload);
                 }
             });
         }

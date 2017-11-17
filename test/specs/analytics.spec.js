@@ -158,12 +158,14 @@ describe('spyfu-vue-analytics', () => {
             vm.$logEvent('whatever', payload);
 
             expect(fooHandler.called).to.be.true;
-            expect(fooHandler.lastCall.args[0]).to.equal(fooWhatever);
-            expect(fooHandler.lastCall.args[1]).to.equal(payload);
+            expect(fooHandler.lastCall.args[0]).to.equal('whatever');
+            expect(fooHandler.lastCall.args[1]).to.equal(fooWhatever);
+            expect(fooHandler.lastCall.args[2]).to.equal(payload);
             
             expect(barHandler.called).to.be.true;
-            expect(barHandler.lastCall.args[0]).to.equal(barWhatever);
-            expect(barHandler.lastCall.args[1]).to.equal(payload);
+            expect(barHandler.lastCall.args[0]).to.equal('whatever');
+            expect(barHandler.lastCall.args[1]).to.equal(barWhatever);
+            expect(barHandler.lastCall.args[2]).to.equal(payload);
         });
     });
 });
