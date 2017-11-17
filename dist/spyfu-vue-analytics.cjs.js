@@ -20,7 +20,9 @@ var index = {
 
             // log page views if a function was passed in
             else if (typeof options.logPageView !== 'undefined') {
-                    if (typeof options.logPageView === 'function') {
+                    if (typeof options.logPageView !== 'function') {
+                        warn('Invalid configuration, "logPageView" must be a function.');
+                    } else {
                         Vue.mixin({
                             created() {
                                 if (this.$root === this) {
@@ -28,10 +30,22 @@ var index = {
                                 }
                             }
                         });
-                    } else {
-                        warn('Invalid configuration, "logPageView" must be a function.');
                     }
                 }
+
+        // and finally, attach our logEvent method to the Vue prototype
+        Vue.prototype.$logEvent = (name, payload) => this.logEvent(options.events, name, payload);
+    },
+    logEvent(events, name, payload) {
+        // make sure the given event exists
+        if (typeof events[name] === 'undefined') {
+            warn(`Unknown event "${name}".`);
+        }
+
+        // make sure the given event value is an object
+        else if (typeof events[name] !== 'object') {
+                warn(`Invalid configuration for "${name}" event, value must be an object.`);
+            }
     }
 };
 
