@@ -1,6 +1,6 @@
 {
   "name": "spyfu-vue-analytics",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Easily log events to third party analytics providers",
   "main": "dist/spyfu-vue-analytics.cjs.js",
   "module": "dist/spyfu-vue-analytics.esm.js",
