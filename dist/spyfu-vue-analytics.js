@@ -15,6 +15,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
   return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
 };
 
+var defaultModifier = function defaultModifier(obj) {
+    return obj;
+};
+
 var index = {
     install: function install(Vue) {
         var _this = this;
@@ -49,10 +53,11 @@ var index = {
 
         // and finally, attach our logEvent method to the Vue prototype
         Vue.prototype.$logEvent = function (name, payload) {
-            return _this.logEvent(options, name, payload);
+            var modifierFn = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : defaultModifier;
+            return _this.logEvent(options, name, payload, modifierFn);
         };
     },
-    logEvent: function logEvent(options, name, payload) {
+    logEvent: function logEvent(options, name, payload, modifierFn) {
         var events = options.events,
             handlers = options.handlers;
 
@@ -78,7 +83,9 @@ var index = {
 
                         // otherwise call the given handler
                         else {
-                                handlers[key](name, events[name][key], payload);
+                                var attrs = modifierFn(Object.assign({}, events[name][key]));
+
+                                handlers[key](name, attrs, payload);
                             }
                     });
                 }
