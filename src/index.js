@@ -1,5 +1,7 @@
 import warn from './utils/warn';
 
+const defaultModifier = (obj) => obj;
+
 export default {
     install(Vue, options = null) {
         
@@ -29,9 +31,9 @@ export default {
         }
 
         // and finally, attach our logEvent method to the Vue prototype
-        Vue.prototype.$logEvent = (name, payload) => this.logEvent(options, name, payload);
+        Vue.prototype.$logEvent = (name, payload, modifierFn = defaultModifier) => this.logEvent(options, name, payload, modifierFn);
     },
-    logEvent(options, name, payload) {
+    logEvent(options, name, payload, modifierFn) {
         const { events, handlers } = options;
 
         // make sure the given event exists
@@ -55,7 +57,9 @@ export default {
 
                 // otherwise call the given handler
                 else {
-                    handlers[key](name, events[name][key], payload);
+                    const attrs = modifierFn(Object.assign({}, events[name][key]));
+
+                    handlers[key](name, attrs, payload);
                 }
             });
         }
